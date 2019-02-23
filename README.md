@@ -14,6 +14,7 @@
 3. The data service is too tightly coupled to the product catalogue service making either untestable. Rather adopt the Repository Pattern.
 4. The product catalogue service will always return the ZAR currency, this should be configurable (either as part of authentication / jwt token or configuration file or passed in as a parameter in the search).
 5. The vendor service will extremely poorly written. Why does the client expect it to return multiple products based on a single id?
+6. Even though the client passes in an id, it just returns the first product from the vendor service without checking that it is in fact the product requested.
 
 ## Architecture
 1. I would probably decouple the price records from the product as the current architecture does not scale well. Why load all of the prices and currencies when say most of your products are sold in ZAR anyway? In this way you could have different prices for different sales channels, and you can run promotional prices over seasons or have special prices for partners.
