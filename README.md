@@ -4,9 +4,10 @@
 2. The data is sourced from an external service (perhaps a vendor service) which by the looks of it is insecure.
 3. It's apparent that both services are not REST compliant. 
 4. An example of the point in 3 is that the wrong verb is used to GET a product but as that data source is a vendor service it's something you'll just have to work with I guess. I'll just assume it's what it is but it's probably not a good idea not to foresee that this dependency would be questioned by people doing the interview. Terrible service.
-5. There's a lot of mapping going about with closely related objects, I would use automap for that.
+5. There's a lot of mapping going about with closely related objects, I would use AutoMap for that.
 6. No strong typing of the results for these services.
 7. This code is not written according to SOLID principles.
+8. Use of WebClient discouraged (not easy to work with server-side compression, throws an exception on any != 2xx response so not reasy to work with REST service)
 
 ## Obvious bugs
 1. There is no error handling so what happens when an invalid search parameter is used?
