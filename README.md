@@ -23,5 +23,12 @@ See fixes branch.
 1. I would probably decouple the price records from the product as the current architecture does not scale well. Why load all of the prices and currencies when say most of your products are sold in ZAR anyway? In this way you could have different prices for different sales channels, and you can run promotional prices over seasons or have special prices for partners.
 2. I would create a currency service and price the products in the source cost currency, and use the service to apply a markup and local currency.
 3. I would convert the calls to asynchronous using Task based processing, seeing that you will be I/O bound for most of the time the service runs (assuming that the vendor service stays in place). You will get higher throughput and make less load on the thread pool.
-5. Wrap the results into a message and data block, use server status codes to be more REST compliant (404 on invalid search etc)
-6. I would also inject a repository into the controller, then create use Mock to create a fake repository and setup the controller to be unit tested.
+5. Wrap the results into a message and data block, use server status codes to be more REST compliant (404 on invalid search etc) (done)
+6. I would also inject a repository into the controller, then create use Mock to create a fake repository and setup the controller to be unit tested. (done)
+
+## Notes
+1. Left out filtering on required currencies, would break the interface into both repository. Besides the vendor service returns all currencies regardless.
+2. Wrapped api responses into an object so always guaranteed of a response, left status code as 200 (default)
+3. Showed tests for repositories + product controller.
+4. Left out testing the vendorservice (rather leave that to business to sort out a better version of the service).
+5. Tested file based repository.
