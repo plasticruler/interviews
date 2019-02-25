@@ -1,3 +1,5 @@
+See fixes branch.
+
 # Realmdigital Pre-Interview Refactoring #
 
 The code contained herein contains duplication, inconsistencies, implements bad practices and is untestable.
