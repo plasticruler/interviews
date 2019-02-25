@@ -17,9 +17,9 @@ namespace Realmdigital_Interview.Repository
         List<ApiResponseProduct> _allProducts = null;
         IMapper _mapper;
         ILogger _logger;
-        public ProductFileRepository(IMapper mapper, ILogger<ProductFileRepository> logger, IConfigurationData configurationData)
+        public ProductFileRepository(ILogger<ProductFileRepository> logger,IMapper mapper,  IConfigurationData configurationData)
         {
-            _fileLocation = configurationData.FileLocation; //assume you may cache this file contents
+            _fileLocation = configurationData.FileLocation; //assume you may cache this file contents (injected as a Singleton)
             _logger = logger;
             _mapper = mapper;
             _logger.LogInformation("Repository is in constructor");

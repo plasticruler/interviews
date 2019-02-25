@@ -19,6 +19,10 @@ namespace Realmdigital_Interview
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+                .UseStartup<Startup>()
+                .ConfigureLogging(l=>{
+                    l.ClearProviders();
+                    l.AddConsole();
+                });
     }
 }

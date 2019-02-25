@@ -1,106 +1,72 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Realmdigital_Interview.Entities;
+using Realmdigital_Interview.Infrastructure;
+using Realmdigital_Interview.Repository;
 
 namespace Realmdigital_Interview.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
-    {
-        
+    {        
+        IProductRepository _repository;
+        ILogger _logger;
+        public ProductController(IProductRepository repository, ILogger<ProductController> logger){
+            _repository = repository;
+            _logger = logger;
+            _logger.LogDebug("In ProductController constructor.");
+        }
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<ApiResponse<List<string>>> Get()
         {
-            return new string[] {"welcome"};
-        }
-        
-        [HttpGet("{id}")]
-        public object GetProductById(string id)
-        {
-            string response = "";
-
-            using (var client = new WebClient())
-            {
-                client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                response = client.UploadString("http://192.168.0.241/eanlist?type=Web", "POST", "{ \"id\": \"" + id + "\" }");
-            }
-            var reponseObject = JsonConvert.DeserializeObject<List<ApiResponseProduct>>(response);
-
-            var result = new List<object>();
-            for (int i = 0; i < reponseObject.Count; i++)
-            {
-                var prices = new List<object>();
-                for (int j = 0; j < reponseObject[i].PriceRecords.Count; j++)
-                {
-                    if (reponseObject[i].PriceRecords[j].CurrencyCode == "ZAR")
-                    {
-                        prices.Add(new
-                        {
-                            Price = reponseObject[i].PriceRecords[j].SellingPrice,
-                            Currency = reponseObject[i].PriceRecords[j].CurrencyCode
-                        });
-                    }
-                }
-                result.Add(new
-                {
-                    Id = reponseObject[i].BarCode,
-                    Name = reponseObject[i].ItemName,
-                    Prices = prices
-                });
-            }
-            return result.Count > 0 ? result[0] : null;
-        }
-
-        [HttpGet("search/{productName}")]
-        public List<object> GetProductsByName(string productName)
-        {
-            string response = "";
-
-            using (var client = new WebClient())
-            {
-                client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                response = client.UploadString("http://192.168.0.241/eanlist?type=Web", "POST", "{ \"names\": \"" + productName + "\" }");
-            }
-            var reponseObject = JsonConvert.DeserializeObject<List<ApiResponseProduct>>(response);
-
-            var result = new List<object>();
-            for (int i = 0; i < reponseObject.Count; i++)
-            {
-                var prices = new List<object>();
-                for (int j = 0; j < reponseObject[i].PriceRecords.Count; j++)
-                {
-                    if (reponseObject[i].PriceRecords[j].CurrencyCode == "ZAR")
-                    {
-                        prices.Add(new
-                        {
-                            Price = reponseObject[i].PriceRecords[j].SellingPrice,
-                            Currency = reponseObject[i].PriceRecords[j].CurrencyCode
-                        });
-                    }
-                }
-                result.Add(new
-                {
-                    Id = reponseObject[i].BarCode,
-                    Name = reponseObject[i].ItemName,
-                    Prices = prices
-                });
-            }
+            var result = new ApiResponse<List<string>>();
+            result.SetContent(new List<string>{"welcome"});
             return result;
         }
         
-        class ApiResponseProduct
+        [HttpGet("{id}")]
+        public ActionResult<ApiResponse<DtoApiResponseProduct>> GetProductById(string id) //using this makes auto documenting the API easier and also declares return type
         {
-            public string BarCode { get; set; }
-            public string ItemName { get; set; }
-            public List<ApiResponsePrice> PriceRecords { get; set; }
+            var r = new ApiResponse<DtoApiResponseProduct>();
+            try{
+                var result = _repository.GetProductById(id);                
+                if (result!=null)
+                {
+                    r.SetContent(_repository.GetProductById(id));
+                }
+                    
+            }
+            catch(Exception x){
+                r.AddError(new Error(){
+                    Code = 1, //have a code lookup method based on exception
+                    Message = x.Message //also store stacktrace if app run in special mode
+                });
+            }            
+           return r;
         }
 
-        class ApiResponsePrice
+        [HttpGet("search/{productName}")]
+        public ActionResult<ApiResponse<List<DtoApiResponseProduct>>> GetProductsByName(string productName)
         {
-            public string SellingPrice { get; set; }
-            public string CurrencyCode { get; set; }
-        }
+            var r = new ApiResponse<List<DtoApiResponseProduct>>();
+            try{
+                var result = _repository.GetProductsByName(productName);
+                if (result!=null){                    
+                    r.SetContent(result);
+                }
+            }
+            catch(Exception x){
+                r.AddError(new Error(){
+                    Code = 1, //have a code lookup method based on exception
+                    Message = x.Message
+                });
+            }            
+           return r;
+        }        
     }
 }

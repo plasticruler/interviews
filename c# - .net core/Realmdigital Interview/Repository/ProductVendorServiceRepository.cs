@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -26,7 +27,7 @@ namespace Realmdigital_Interview.Repository
             using (var client = new WebClient())
             {
                 client.Headers[HttpRequestHeader.ContentType] = "application/json"; //you post this type but also tell service your supported media type (xml/json/whatever) a real REST service support content-negotiation
-                client.Headers[HttpRequestHeader.Accept] = "application/json";
+                client.Headers[HttpRequestHeader.Accept] = "application/json"; //content negotation (change vendor service to support compression?)
                 response = client.UploadString(_configurationData.ServiceUrl, "POST", "{ \"id\": \"" + id + "\" }"); //for this to be REST-compliant should be GET, pass in search param as querystring
             }
             return  _mapper.Map<ApiResponseProduct, DtoApiResponseProduct>(JsonConvert.DeserializeObject<ApiResponseProduct>(response));
