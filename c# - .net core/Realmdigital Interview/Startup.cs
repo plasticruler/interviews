@@ -20,7 +20,6 @@ namespace Realmdigital_Interview
 {
     public class Startup
     {
-        ILoggerFactory _loggerFactory;
         public Startup()
         {
 

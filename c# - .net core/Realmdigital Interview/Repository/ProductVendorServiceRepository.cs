@@ -11,7 +11,6 @@ namespace Realmdigital_Interview.Repository
 {
     public class ProductVendorServiceRepository:IProductRepository
     {
-        List<ApiResponseProduct> _allProducts = null;
         IMapper _mapper;
         ILogger _logger;
         IConfigurationData _configurationData;
@@ -19,7 +18,7 @@ namespace Realmdigital_Interview.Repository
             _logger = logger;
             _mapper = mapper;
             _configurationData = configurationData;
-        }
+        } 
      public async Task<DtoApiResponseProduct> GetProductById(string id)
         {
             string response = "";
