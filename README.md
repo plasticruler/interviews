@@ -32,3 +32,4 @@ See fixes branch.
 3. Showed tests for repositories + product controller.
 4. Left out testing the vendorservice (rather leave that to business to sort out a better version of the service).
 5. Tested file based repository.
+6. Left out filtering the currencies, you should put that filter at the vendor service. Pointless to add additional processing to exclude !ZAR. 
