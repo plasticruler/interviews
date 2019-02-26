@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -30,14 +31,14 @@ namespace Realmdigital_Interview.Controllers
         }
         
         [HttpGet("{id}")]
-        public ActionResult<ApiResponse<DtoApiResponseProduct>> GetProductById(string id) //using this makes auto documenting the API easier and also declares return type
+        public async Task<ActionResult<ApiResponse<DtoApiResponseProduct>>> GetProductById(string id) //using this makes auto documenting the API easier and also declares return type
         {
             var r = new ApiResponse<DtoApiResponseProduct>();
             try{
                 var result = _repository.GetProductById(id);                
                 if (result!=null)
                 {
-                    r.SetContent(_repository.GetProductById(id));
+                    r.SetContent(await _repository.GetProductById(id));
                 }
                     
             }
@@ -51,13 +52,13 @@ namespace Realmdigital_Interview.Controllers
         }
 
         [HttpGet("search/{productName}")]
-        public ActionResult<ApiResponse<List<DtoApiResponseProduct>>> GetProductsByName(string productName)
+        public async Task<ActionResult<ApiResponse<List<DtoApiResponseProduct>>>> GetProductsByName(string productName)
         {
             var r = new ApiResponse<List<DtoApiResponseProduct>>();
             try{
                 var result = _repository.GetProductsByName(productName);
                 if (result!=null){                    
-                    r.SetContent(result);
+                    r.SetContent(await result);
                 }
             }
             catch(Exception x){

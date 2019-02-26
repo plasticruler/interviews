@@ -20,7 +20,7 @@ namespace Realmdigital_Interview.Repository
             _mapper = mapper;
             _configurationData = configurationData;
         }
-     public DtoApiResponseProduct GetProductById(string id)
+     public async Task<DtoApiResponseProduct> GetProductById(string id)
         {
             string response = "";
 
@@ -30,10 +30,10 @@ namespace Realmdigital_Interview.Repository
                 client.Headers[HttpRequestHeader.Accept] = "application/json"; //content negotation (change vendor service to support compression?)
                 response = client.UploadString(_configurationData.ServiceUrl, "POST", "{ \"id\": \"" + id + "\" }"); //for this to be REST-compliant should be GET, pass in search param as querystring
             }
-            return  _mapper.Map<ApiResponseProduct, DtoApiResponseProduct>(JsonConvert.DeserializeObject<ApiResponseProduct>(response));
+            return  await Task.Run(()=>_mapper.Map<ApiResponseProduct, DtoApiResponseProduct>(JsonConvert.DeserializeObject<ApiResponseProduct>(response)));
         }
 
-        public List<DtoApiResponseProduct> GetProductsByName(string productName)
+        public async Task<List<DtoApiResponseProduct>> GetProductsByName(string productName)
         {
             string response = "";
 
@@ -43,7 +43,7 @@ namespace Realmdigital_Interview.Repository
                 client.Headers[HttpRequestHeader.Accept] = "application/json";
                 response = client.UploadString(_configurationData.ServiceUrl, "POST", "{ \"names\": \"" + productName + "\" }"); //for this to be REST-compliant should be GET, pass in search param as querystring
             }
-            return  _mapper.Map<List<ApiResponseProduct>, List<DtoApiResponseProduct>>(JsonConvert.DeserializeObject<List<ApiResponseProduct>>(response));
+            return  await Task.Run(()=>_mapper.Map<List<ApiResponseProduct>, List<DtoApiResponseProduct>>(JsonConvert.DeserializeObject<List<ApiResponseProduct>>(response)));
         }   
     }
 }

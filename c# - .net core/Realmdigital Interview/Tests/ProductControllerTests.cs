@@ -42,8 +42,8 @@ namespace Realmdigital_Interview.Tests
         [Test]
         public void Test_ProductController_IsCorrectResponse(){
             var result = _productController.GetProductById("bar_code_1");
-            Assert.AreEqual(result.Value.Errors.Count(),0);
-            Assert.AreEqual(result.Value.Content.Name,"item_name_1");
+            Assert.AreEqual(result.Result.Value.Errors.Count(),0);
+            Assert.AreEqual(result.Result.Value.Content.Name,"item_name_1");
         }
     }
 }

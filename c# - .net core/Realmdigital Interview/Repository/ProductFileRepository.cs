@@ -8,6 +8,7 @@ using System.Linq;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Realmdigital_Interview.Configuration;
+using System.Threading.Tasks;
 
 namespace Realmdigital_Interview.Repository
 {
@@ -35,16 +36,16 @@ namespace Realmdigital_Interview.Repository
             else
                throw new FileNotFoundException(_fileLocation);
         }
-        public DtoApiResponseProduct GetProductById(string Id)
+        public async  Task<DtoApiResponseProduct> GetProductById(string Id)
         {
             var v = _allProducts.FirstOrDefault(x=>x.BarCode==Id);
-            return _mapper.Map<ApiResponseProduct, DtoApiResponseProduct>(v);
+            return await Task.Run(() => _mapper.Map<ApiResponseProduct, DtoApiResponseProduct>(v));
         }
 
-        public List<DtoApiResponseProduct> GetProductsByName(string productName)
+        public async Task<List<DtoApiResponseProduct>> GetProductsByName(string productName)
         {
             var v = _allProducts.Where(x=>x.ItemName == productName);
-            return _mapper.Map<List<ApiResponseProduct>,List<DtoApiResponseProduct>>(v.ToList());
+            return await Task.Run(()=>_mapper.Map<List<ApiResponseProduct>,List<DtoApiResponseProduct>>(v.ToList()));
         }       
     }
 }

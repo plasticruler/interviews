@@ -34,13 +34,13 @@ namespace Realmdigital_Interview.Tests
         [Test]
         public void FileRepository_RepositoryFile_ProductExists(){
             var product = _fileRepository.GetProductById("bar_code_1"); 
-            Assert.IsNotNull(product);//found product
-            Assert.IsTrue(product.Prices.Count>0); //prices loaded (automapper mapped prices from json file to dto object)
+            Assert.IsNotNull(product);//found product            
+            Assert.IsTrue(product.Result.Prices.Count>0); //prices loaded (automapper mapped prices from json file to dto object)
         }
          [Test]
         public void FileRepository_RepositoryFile_ProductDoesNotExists(){
             var product = _fileRepository.GetProductById("bar_code_1NOTEXIST");//don't find product
-            Assert.IsNull(product);
+            Assert.IsNull(product.Result);
         }
     }
 }
